@@ -18,7 +18,6 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class LaunchBlockKafkaConsumerConnection {
-
 	// may be different in a development environment if kafka is running inside of docker while sdk is not (check docker settings)
 	public static final String HOSTNAME = "kafka";
 	public static final int PORT = 9092;
@@ -30,7 +29,6 @@ public class LaunchBlockKafkaConsumerConnection {
 
 	/// Specifies consumers to call when a kafka message is received
 	private final List<Consumer<ConsumerRecord<String, String>>> consumerPassthrough;
-
 
 	private volatile boolean running = false;
 

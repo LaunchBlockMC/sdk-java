@@ -6,7 +6,7 @@ import gg.launchblock.sdk.exception.LaunchBlockSDKExceptionType;
 
 import java.util.UUID;
 
-public class LaunchBlockProjectCreatedEvent extends LaunchBlockEvent {
+public class LaunchBlockProjectDeletedEvent extends LaunchBlockEvent {
 
 	private final String projectName;
 
@@ -14,28 +14,28 @@ public class LaunchBlockProjectCreatedEvent extends LaunchBlockEvent {
 
 	private final UUID environmentId;
 
-	public LaunchBlockProjectCreatedEvent(final String topic, final JsonNode rawContent) {
+	public LaunchBlockProjectDeletedEvent(final String topic, final JsonNode rawContent) {
 		super(topic, rawContent);
 
 		try {
 			projectName = rawContent.get("projectName").asText();
 		} catch (Exception e) {
 			throw new LaunchBlockSDKException(e, LaunchBlockSDKExceptionType.EVENT_HANDLING,
-					"Attempted to create a LaunchBlockProjectCreatedEvent with topic '%s' with an invalid project name".formatted(topic));
+					"Attempted to create a %s with topic '%s' with an invalid project name".formatted(getClass().getSimpleName(), topic));
 		}
 
 		try {
 			environmentId = UUID.fromString(rawContent.get("environmentIdentifier").asText());
 		} catch (Exception e) {
 			throw new LaunchBlockSDKException(e, LaunchBlockSDKExceptionType.EVENT_HANDLING,
-					"Attempted to create a LaunchBlockProjectCreatedEvent with topic '%s' with an invalid environment identifier".formatted(topic));
+					"Attempted to create a %s with topic '%s' with an invalid environment identifier".formatted(getClass().getSimpleName(), topic));
 		}
 
 		try {
 			projectId = UUID.fromString(rawContent.get("projectIdentifier").asText());
 		} catch (Exception e) {
 			throw new LaunchBlockSDKException(e, LaunchBlockSDKExceptionType.EVENT_HANDLING,
-					"Attempted to create a LaunchBlockProjectCreatedEvent with topic '%s' with an invalid project identifier".formatted(topic));
+					"Attempted to create a %s with topic '%s' with an invalid project identifier".formatted(getClass().getSimpleName(), topic));
 		}
 
 

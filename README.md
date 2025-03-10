@@ -36,7 +36,6 @@ public class Main {
 }
 ```
 
----
 ## Creating events
 Create a class extending `LaunchBlockEvent` with a constructor of `(String, JsonNode)`, representing the topic and raw json message sent through kafka.
 

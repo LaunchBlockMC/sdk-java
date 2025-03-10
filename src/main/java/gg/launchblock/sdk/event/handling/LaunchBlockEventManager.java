@@ -3,9 +3,7 @@ package gg.launchblock.sdk.event.handling;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gg.launchblock.sdk.event.LaunchBlockEvent;
-import gg.launchblock.sdk.event.LaunchBlockEventType;
-import gg.launchblock.sdk.event.LaunchBlockProjectCreatedEvent;
+import gg.launchblock.sdk.event.*;
 import gg.launchblock.sdk.exception.LaunchBlockSDKException;
 import gg.launchblock.sdk.exception.LaunchBlockSDKExceptionType;
 import gg.launchblock.sdk.util.ImmutablePair;
@@ -83,6 +81,9 @@ public class LaunchBlockEventManager {
 	/// Creates kafka topic bindings for all default LaunchBlock events
 	private void registerDefaultBindings() {
 		topicBindings.put(LaunchBlockEventType.PROJECT_CREATED, LaunchBlockProjectCreatedEvent.class);
+		topicBindings.put(LaunchBlockEventType.PROJECT_DELETED, LaunchBlockProjectDeletedEvent.class);
+		topicBindings.put(LaunchBlockEventType.LIFECYCLE_CREATED, LaunchBlockLifecycleCreatedEvent.class);
+		topicBindings.put(LaunchBlockEventType.LIFECYCLE_STATUS, LaunchBlockLifecycleStatusEvent.class);
 	}
 
 	/**
