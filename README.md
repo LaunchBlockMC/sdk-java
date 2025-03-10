@@ -37,23 +37,23 @@ call its `registerEvents` method on your listener class.
 Remember to `close()` your LaunchBlockEventManager when it is no longer required.
 
 **Example** 
-```
+```java
 public class TestClass implements LaunchBlockEventListener {
 
 	@LaunchBlockEventHandler(priority = LaunchBlockEventPriority.HIGH)
-	public void onProjectCreated(LaunchBlockProjectCreatedEvent e) {
+	public void onProjectCreated(final LaunchBlockProjectCreatedEvent e) {
 		// Someone just created a project!
 	}
-
+	
 }
 ```
-```
+```java
 public class Main {
 
-	public static void main(String[] args) {
-		LaunchBlockEventManager eventManager = new LaunchBlockEventManager();
+	public static void main(final String[] args) {
+        final LaunchBlockEventManager eventManager = new LaunchBlockEventManager();
 		eventManager.registerEvents(new TestClass());
-		...
+		//...
 		eventManager.close();
 	}
 	
@@ -66,23 +66,23 @@ Create a class extending `LaunchBlockEvent` with a constructor of `(String, Json
 To call this event through this constructor when a kafka message is received within a specific topic, use the `createTopicBinding` method on your event manager.
 
 **Example**
-```
+```java
 public class SomeEvent extends LaunchBlockEvent {
 
-	public SomeEvent(String topic, JsonNode rawContent) {
+	public SomeEvent(final String topic, final JsonNode rawContent) {
 		super(topic, rawContent);
 		// Process raw content
 	}
     
 }
 ```
-```
+```java
 public class Main {
 
-	public static void main(String[] args) {
-		LaunchBlockEventManager eventManager = new LaunchBlockEventManager();
+	public static void main(final String[] args) {
+		final LaunchBlockEventManager eventManager = new LaunchBlockEventManager();
 		eventManager.createTopicBinding("kafka_topic", SomeEvent.class);
-		...
+		//...
 		eventManager.close();
 	}
 	
