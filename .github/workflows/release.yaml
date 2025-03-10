@@ -2,7 +2,7 @@ name: 🛠️ Publish to GitHub Packages
 
 on:
   release:
-    types: [ published ]  # Trigger workflow on release publish event
+    types: [published]
 
 jobs:
   deploy:
@@ -26,21 +26,25 @@ jobs:
         with:
           cache-read-only: false
 
-      # Step 4: Set version based on the release tag
+      # Step 4: Grant execute permissions to gradlew
+      - name: Grant execute permissions to gradlew
+        run: chmod +x ./gradlew
+
+      # Step 5: Set version based on the release tag
       - name: Set version based on release tag
         run: echo VERSION=$(echo "${GITHUB_REF}" | sed 's/refs\/tags\///') >> $GITHUB_ENV
 
-      # Step 5: Build the project using Gradle
+      # Step 6: Build the project using Gradle
       - name: Build with Gradle
         run: ./gradlew build
 
-      # Step 6: Publish the project to GitHub Packages
+      # Step 7: Publish the project to GitHub Packages
       - name: Publish to GitHub Packages
         run: ./gradlew publish -Pversion=$VERSION
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for authentication
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 7: Send notification to Discord
+      # Step 8: Send notification to Discord
       - name: Send notification to Discord
         uses: SethCohen/github-releases-to-discord@v1.16.2
         with:
