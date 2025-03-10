@@ -1,11 +1,12 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'gg.launchblock'
 version = '1.0-PREVIEW'
 
-archivesBaseName = 'sdk'
+archivesBaseName = 'java-sdk'
 
 java {
     toolchain {
@@ -24,4 +25,22 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.1'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/LaunchBlockMC/java-sdk")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
