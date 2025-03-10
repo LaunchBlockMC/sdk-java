@@ -38,8 +38,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/LaunchBlockMC/sdk-java")
             credentials {
-                username = project.findProperty("gpr.user") ?: "BillyDotWS"
-                password = project.findProperty("gpr.token") ?: System.getenv("PUBLISHING_TOKEN")
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
