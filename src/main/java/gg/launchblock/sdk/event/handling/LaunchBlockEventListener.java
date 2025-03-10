@@ -1,4 +1,4 @@
-package gg.launchblock.sdk.events.handling;
+package gg.launchblock.sdk.event.handling;
 
 public interface LaunchBlockEventListener {
 }

@@ -1,4 +1,4 @@
-package gg.launchblock.sdk.events.handling;
+package gg.launchblock.sdk.event.handling;
 
 public enum LaunchBlockEventPriority {
 	HIGHEST(2),
@@ -7,7 +7,7 @@ public enum LaunchBlockEventPriority {
 	LOW(-1),
 	LOWEST(-2);
 
-	final int level; // higher = more priority
+	private final int level; // higher = more priority
 
 	LaunchBlockEventPriority(int level) {
 		this.level = level;

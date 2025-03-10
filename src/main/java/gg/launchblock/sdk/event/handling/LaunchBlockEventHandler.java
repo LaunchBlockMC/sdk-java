@@ -1,4 +1,4 @@
-package gg.launchblock.sdk.events.handling;
+package gg.launchblock.sdk.event.handling;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
