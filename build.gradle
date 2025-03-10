@@ -6,7 +6,7 @@ plugins {
 group = 'gg.launchblock'
 version = '1.0-PREVIEW'
 
-archivesBaseName = 'java-sdk'
+archivesBaseName = 'sdk-java'
 
 java {
     toolchain {
@@ -36,7 +36,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/LaunchBlockMC/java-sdk")
+            url = uri("https://maven.pkg.github.com/LaunchBlockMC/sdk-java")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
                 password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
