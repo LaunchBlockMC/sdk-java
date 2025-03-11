@@ -34,24 +34,29 @@ publishing {
             from components.java
 
             // Include POM customizations (if needed)
-            pom {
-                name = 'LaunchBlock Java SDK'
-                description = 'A Java SDK for interacting with the LaunchBlock API'
-                url = 'https://github.com/LaunchBlockMC/sdk-java'
-                licenses {
-                    license {
-                        name = 'Apache License, Version 2.0' as Publication
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0' as Publication
-                    }
-                }
-                scm {
-                    connection = 'scm:git:git@github.com:LaunchBlockMC/sdk-java.git' as Publication
-                    developerConnection = 'scm:git:git@github.com:LaunchBlockMC/sdk-java.git' as Publication
-                    url = 'https://github.com/LaunchBlockMC/sdk-java' as Publication
-                }
+            pom.withXml {
+
+                // Define the project's POM metadata
+                def projectNode = asNode()
+                projectNode.appendNode('name', 'LaunchBlock Java SDK')
+                projectNode.appendNode('description', 'A Java SDK for interacting with the LaunchBlock API')
+                projectNode.appendNode('url', 'https://github.com/LaunchBlockMC/sdk-java')
+
+                // Add license information
+                def licensesNode = projectNode.appendNode('licenses')
+                def licenseNode = licensesNode.appendNode('license')
+                licenseNode.appendNode('name', 'The Apache License, Version 2.0')
+                licenseNode.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+
+                // SCM information
+                def scmNode = projectNode.appendNode('scm')
+                scmNode.appendNode('connection', 'scm:git:git@github.com:LaunchBlockMC/sdk-java.git')
+                scmNode.appendNode('developerConnection', 'scm:git:git@github.com:LaunchBlockMC/sdk-java.git')
+                scmNode.appendNode('url', 'https://github.com/LaunchBlockMC/sdk-java')
             }
         }
     }
+
     repositories {
         maven {
             name = "SonatypeOSS"
