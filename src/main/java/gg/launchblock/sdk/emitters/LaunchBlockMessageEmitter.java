@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import gg.launchblock.sdk.exception.LaunchBlockSDKException;
 import gg.launchblock.sdk.exception.LaunchBlockSDKExceptionType;
 import gg.launchblock.sdk.util.ImmutablePair;
+import gg.launchblock.sdk.util.KafkaUtil;
 import gg.launchblock.sdk.util.LaunchBlockSDKConstants;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -45,6 +46,11 @@ public class LaunchBlockMessageEmitter {
 	}
 
 	public KafkaProducer<String, String> createProducer() {
+		if(!KafkaUtil.isKafkaRunning()) {
+			throw new LaunchBlockSDKException(LaunchBlockSDKExceptionType.KAFKA,
+					"Could not connect to kafka. Make sure your kafka instance is enabled before attempting to emit messages");
+		}
+
 		// for further reading, consult
 		// https://kafka.apache.org/23/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html
 

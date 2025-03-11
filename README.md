@@ -25,6 +25,10 @@ dependencies {
 }
 ```
 
+## Development Environment
+By default, kafka is expected to be running on `kafka:9092`. <br>
+The `KAFKA_HOSTNAME` and `KAFKA_PORT` environment variables may be used to change the hostname and port which the SDK expects kafka on.
+
 ## Listener System
 ### Listening to events
 Create a class implementing `LaunchBlockEventListener`,

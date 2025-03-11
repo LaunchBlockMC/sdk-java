@@ -2,15 +2,13 @@ package gg.launchblock.sdk.event.handling;
 
 import gg.launchblock.sdk.exception.LaunchBlockSDKException;
 import gg.launchblock.sdk.exception.LaunchBlockSDKExceptionType;
+import gg.launchblock.sdk.util.KafkaUtil;
 import gg.launchblock.sdk.util.LaunchBlockSDKConstants;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -19,9 +17,6 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class LaunchBlockKafkaConsumerConnection {
-
-	/// Amount of ms that we try to establish a connection to kafka for before failing
-	public static final int CONNECTION_TIMEOUT = 100;
 
 	private KafkaConsumer<String, String> kafkaConsumer;
 
@@ -78,15 +73,6 @@ public class LaunchBlockKafkaConsumerConnection {
 		running = false;
 	}
 
-	private boolean isKafkaRunning() {
-		try (Socket socket = new Socket()) {
-			socket.connect(new InetSocketAddress(LaunchBlockSDKConstants.KAFKA_HOSTNAME, LaunchBlockSDKConstants.KAFKA_PORT), CONNECTION_TIMEOUT);
-			return true;
-		} catch (IOException unused) {
-			return false;
-		}
-	}
-
 	private KafkaConsumer<String, String> createConsumer() {
 		// for further information,
 		// https://kafka.apache.org/10/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html
@@ -112,9 +98,9 @@ public class LaunchBlockKafkaConsumerConnection {
 			return;
 		}
 
-		if (!isKafkaRunning()) {
+		if (!KafkaUtil.isKafkaRunning()) {
 			throw new LaunchBlockSDKException(LaunchBlockSDKExceptionType.KAFKA,
-					"Could not connect to kafka. Make sure your kafka instance is enabled before listening to it.");
+					"Could not connect to kafka. Make sure your kafka instance is enabled before listening to it");
 		}
 
 		running = true;
