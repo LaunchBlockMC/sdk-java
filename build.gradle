@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'signing'  // Add signing plugin for GPG signing
+    id 'org.jreleaser' version '1.17.0'
 }
 
 group = 'gg.launchblock'
@@ -30,49 +30,53 @@ dependencies {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
+            groupId = 'gg.launchblock'
+            artifactId = 'sdk-java'
+
             from components.java
-
-            // Include POM customizations (if needed)
-            pom.withXml {
-
-                // Define the project's POM metadata
-                def projectNode = asNode()
-                projectNode.appendNode('name', 'LaunchBlock Java SDK')
-                projectNode.appendNode('description', 'A Java SDK for interacting with the LaunchBlock API')
-                projectNode.appendNode('url', 'https://github.com/LaunchBlockMC/sdk-java')
-
-                // Add license information
-                def licensesNode = projectNode.appendNode('licenses')
-                def licenseNode = licensesNode.appendNode('license')
-                licenseNode.appendNode('name', 'The Apache License, Version 2.0')
-                licenseNode.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
-
-                // SCM information
-                def scmNode = projectNode.appendNode('scm')
-                scmNode.appendNode('connection', 'scm:git:git@github.com:LaunchBlockMC/sdk-java.git')
-                scmNode.appendNode('developerConnection', 'scm:git:git@github.com:LaunchBlockMC/sdk-java.git')
-                scmNode.appendNode('url', 'https://github.com/LaunchBlockMC/sdk-java')
+            
+            pom {
+                name = 'LaunchBlock Java SDK'
+                description = 'A Java SDK for interacting with our API'
+                url = 'https://github.com/LaunchBlockMC/sdk-java'
+                inceptionYear = '2025'
+                licenses {
+                    license {
+                        name = 'Apache-2.0'
+                        url = 'https://spdx.org/licenses/Apache-2.0.html'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/aalmiray/app.git'
+                    developerConnection = 'scm:git:ssh://github.com/aalmiray/app.git'
+                    url = 'http://github.com/aalmiray/app'
+                }
             }
         }
     }
 
     repositories {
         maven {
-            name = "SonatypeOSS"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")  // Sonatype's repository
-
-            credentials {
-                username = project.findProperty("sonatypeUsername") ?: System.getenv("SONATYPE_USERNAME")
-                password = project.findProperty("sonatypePassword") ?: System.getenv("SONATYPE_PASSWORD")
-            }
+            url = layout.buildDirectory.dir('staging-deploy')
         }
     }
 }
 
-signing {
-    useGpgCmd()
-    // Ensure the project is signed
-    sign publishing.publications.mavenJava
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('target/staging-deploy')
+                }
+            }
+        }
+    }
 }
-
