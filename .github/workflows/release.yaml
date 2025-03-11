@@ -40,7 +40,7 @@ jobs:
 
       # Step 8: Publish the project to Sonatype OSSRH
       - name: Publish to Sonatype OSSRH
-        run: ./gradlew publish -Pversion=$VERSION
+        run: ./gradlew jreleaserFullRelease
         env:
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
           JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
