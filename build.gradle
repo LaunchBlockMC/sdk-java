@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'signing'  // Add signing plugin for GPG signing
 }
 
 group = 'gg.launchblock'
@@ -15,7 +16,7 @@ java {
 }
 
 repositories {
-    mavenCentral()
+    mavenCentral()  // Use Maven Central repository
 }
 
 dependencies {
@@ -31,16 +32,42 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+
+            // Include POM customizations (if needed)
+            pom {
+                name = 'LaunchBlock Java SDK'
+                description = 'A Java SDK for interacting with the LaunchBlock API'
+                url = 'https://github.com/LaunchBlockMC/sdk-java'
+                licenses {
+                    license {
+                        name = 'Apache License, Version 2.0' as Publication
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0' as Publication
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:LaunchBlockMC/sdk-java.git' as Publication
+                    developerConnection = 'scm:git:git@github.com:LaunchBlockMC/sdk-java.git' as Publication
+                    url = 'https://github.com/LaunchBlockMC/sdk-java' as Publication
+                }
+            }
         }
     }
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/LaunchBlockMC/sdk-java")
+            name = "SonatypeOSS"
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")  // Sonatype's repository
+
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+                username = project.findProperty("sonatypeUsername") ?: System.getenv("SONATYPE_USERNAME")
+                password = project.findProperty("sonatypePassword") ?: System.getenv("SONATYPE_PASSWORD")
             }
         }
     }
 }
+
+signing {
+    useGpgCmd()
+    // Ensure the project is signed
+    sign publishing.publications.mavenJava
+}
+

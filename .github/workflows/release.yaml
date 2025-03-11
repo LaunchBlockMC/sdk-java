@@ -1,4 +1,4 @@
-name: 🛠️ Publish to GitHub Packages
+name: 🛠️ Publish to Sonatype
 
 on:
   release:
@@ -20,31 +20,39 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
-      # Step 3: Setup Gradle
+      # Step 3: Set up GPG
+      - name: Set up GPG key
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --pinentry-mode loopback --sign
+
+      # Step 4: Setup Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
           cache-read-only: false
 
-      # Step 4: Grant execute permissions to gradlew
+      # Step 5: Grant execute permissions to gradlew
       - name: Grant execute permissions to gradlew
         run: chmod +x ./gradlew
 
-      # Step 5: Set version based on the release tag
+      # Step 6: Set version based on the release tag
       - name: Set version based on release tag
         run: echo VERSION=$(echo "${GITHUB_REF}" | sed 's/refs\/tags\///') >> $GITHUB_ENV
 
-      # Step 6: Build the project using Gradle
+      # Step 7: Build the project using Gradle
       - name: Build with Gradle
         run: ./gradlew build
 
-      # Step 7: Publish the project to GitHub Packages
-      - name: Publish to GitHub Packages
+      # Step 8: Publish the project to Sonatype OSSRH
+      - name: Publish to Sonatype OSSRH
         run: ./gradlew publish -Pversion=$VERSION
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
 
-      # Step 8: Send notification to Discord
+      # Step 9: Send notification to Discord
       - name: Send notification to Discord
         uses: SethCohen/github-releases-to-discord@v1.16.2
         with:
