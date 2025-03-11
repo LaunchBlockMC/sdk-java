@@ -20,15 +20,6 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
-      # Step 3: Set up GPG
-      - name: Set up GPG key
-        run: |
-          echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --batch --import
-          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --pinentry-mode loopback --sign
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
       # Step 4: Setup Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -51,9 +42,11 @@ jobs:
       - name: Publish to Sonatype OSSRH
         run: ./gradlew publish -Pversion=$VERSION
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
+          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.JRELEASER_MAVENCENTRAL_PASSWORD }}
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_USERNAME }}
 
       # Step 9: Send notification to Discord
       - name: Send notification to Discord
