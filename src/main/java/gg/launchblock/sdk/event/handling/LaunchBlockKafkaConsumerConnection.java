@@ -2,6 +2,7 @@ package gg.launchblock.sdk.event.handling;
 
 import gg.launchblock.sdk.exception.LaunchBlockSDKException;
 import gg.launchblock.sdk.exception.LaunchBlockSDKExceptionType;
+import gg.launchblock.sdk.util.LaunchBlockSDKConstants;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -18,9 +19,6 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class LaunchBlockKafkaConsumerConnection {
-	// may be different in a development environment if kafka is running inside of docker while sdk is not (check docker settings)
-	public static final String HOSTNAME = "kafka";
-	public static final int PORT = 9092;
 
 	/// Amount of ms that we try to establish a connection to kafka for before failing
 	public static final int CONNECTION_TIMEOUT = 100;
@@ -70,8 +68,7 @@ public class LaunchBlockKafkaConsumerConnection {
 
 				kafkaConsumer.commitSync(); // advances offset to not receive old events
 			}
-		} catch (
-				WakeupException e) { // when an indefinitely running poll tries to wake up through close(), we want to close.
+		} catch (WakeupException e) { // when an indefinitely running poll tries to wake up through close(), we want to close.
 			kafkaConsumer.close();
 			running = false;
 			return;
@@ -83,7 +80,7 @@ public class LaunchBlockKafkaConsumerConnection {
 
 	private boolean isKafkaRunning() {
 		try (Socket socket = new Socket()) {
-			socket.connect(new InetSocketAddress(HOSTNAME, PORT), CONNECTION_TIMEOUT);
+			socket.connect(new InetSocketAddress(LaunchBlockSDKConstants.KAFKA_HOSTNAME, LaunchBlockSDKConstants.KAFKA_PORT), CONNECTION_TIMEOUT);
 			return true;
 		} catch (IOException unused) {
 			return false;
@@ -95,7 +92,7 @@ public class LaunchBlockKafkaConsumerConnection {
 		// https://kafka.apache.org/10/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html
 
 		Properties props = new Properties();
-		props.put("bootstrap.servers", HOSTNAME + ":" + PORT);
+		props.put("bootstrap.servers", LaunchBlockSDKConstants.KAFKA_HOSTNAME + ":" + LaunchBlockSDKConstants.KAFKA_PORT);
 		props.put("group.id", getGroupId()); // used for load distribution
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
