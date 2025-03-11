@@ -104,7 +104,7 @@ public class Main {
 	public static void main(final String[] args) {
 		final LaunchBlockEventEmitter emitter = new LaunchBlockEventEmitter();
 
-		ObjectNode message = new ObjectMapper().createObjectNode();
+		final ObjectNode message = new ObjectMapper().createObjectNode();
 		message.put("host", "launchblock.gg");
 		
 		emitter.send("kafka_topic", message);
