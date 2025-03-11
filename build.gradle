@@ -52,6 +52,13 @@ publishing {
                     developerConnection = 'scm:git:ssh://github.com/aalmiray/app.git'
                     url = 'http://github.com/aalmiray/app'
                 }
+                developers {
+                    developer {
+                        id = 'LaunchBlockMC'
+                        name = 'LaunchBlock Team'
+                        email = 'help@launchblock.gg'
+                    }
+                }
             }
         }
     }
