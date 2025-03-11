@@ -80,10 +80,10 @@ public class LaunchBlockEventManager {
 
 	/// Creates kafka topic bindings for all default LaunchBlock events
 	private void registerDefaultBindings() {
-		topicBindings.put(LaunchBlockEventType.PROJECT_CREATED, LaunchBlockProjectCreatedEvent.class);
-		topicBindings.put(LaunchBlockEventType.PROJECT_DELETED, LaunchBlockProjectDeletedEvent.class);
-		topicBindings.put(LaunchBlockEventType.LIFECYCLE_CREATED, LaunchBlockLifecycleCreatedEvent.class);
-		topicBindings.put(LaunchBlockEventType.LIFECYCLE_STATUS, LaunchBlockLifecycleStatusEvent.class);
+		topicBindings.put(LaunchBlockEventTopic.PROJECT_CREATED, LaunchBlockProjectCreatedEvent.class);
+		topicBindings.put(LaunchBlockEventTopic.PROJECT_DELETED, LaunchBlockProjectDeletedEvent.class);
+		topicBindings.put(LaunchBlockEventTopic.LIFECYCLE_CREATED, LaunchBlockLifecycleCreatedEvent.class);
+		topicBindings.put(LaunchBlockEventTopic.LIFECYCLE_STATUS, LaunchBlockLifecycleStatusEvent.class);
 	}
 
 	/**
@@ -152,7 +152,10 @@ public class LaunchBlockEventManager {
 	 * @return true if the topic is not already bound
 	 */
 	public boolean createTopicBinding(final String topic, Class<? extends LaunchBlockEvent> eventType) {
-		if (topicBindings.containsKey(topic)) return false;
+		if (topicBindings.containsKey(topic)) {
+			LaunchBlockSDKConstants.JAVA_SDK_LOGGER.info("Failed to create topic binding for '{}' since one already exists", topic);
+			return false;
+		}
 		topicBindings.put(topic, eventType);
 		return true;
 	}

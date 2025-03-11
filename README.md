@@ -25,16 +25,23 @@ dependencies {
 }
 ```
 
+## Development Environment
+By default, kafka is expected to be running on `kafka:9092`. <br>
+The `KAFKA_HOSTNAME` and `KAFKA_PORT` environment variables may be used to change the hostname and port which the SDK expects kafka on.
+
 ## Listener System
 ### Listening to events
 Create a class implementing `LaunchBlockEventListener`,
 then use methods annotated with `@LaunchBlockEventHandler`
 with one parameter representing a class which extends `LaunchBlockEvent`.
 
-To register events in this class, create a `LaunchBlockEventManager` and 
-call its `registerEvents` method on your listener class. 
+To register events on an object of this type, create a `LaunchBlockEventManager` and 
+call its `registerEvents` method on your listener object. 
 
 Remember to `close()` your LaunchBlockEventManager when it is no longer required.
+
+**Load Distribution** <br>
+the `groupId` parameter in `LaunchBlockEventManager`'s constructor may be used to distribute events across all event managers with this group id. (usually across multiple running instances of an application)
 
 **Example** 
 ```java
@@ -51,7 +58,7 @@ public class TestClass implements LaunchBlockEventListener {
 public class Main {
 
 	public static void main(final String[] args) {
-        final LaunchBlockEventManager eventManager = new LaunchBlockEventManager();
+		final LaunchBlockEventManager eventManager = new LaunchBlockEventManager();
 		eventManager.registerEvents(new TestClass());
 		//...
 		eventManager.close();
@@ -84,6 +91,30 @@ public class Main {
 		eventManager.createTopicBinding("kafka_topic", SomeEvent.class);
 		//...
 		eventManager.close();
+	}
+	
+}
+```
+
+## Emitter System
+To send messages to kafka topics, which may be picked up by the listener system, you may use the emitter system.
+
+To use, create a `LaunchBlockMessageEmitter` object and call its `send` method.
+
+**Example**
+```java
+public class Main {
+
+	public static void main(final String[] args) {
+		final LaunchBlockEventEmitter emitter = new LaunchBlockEventEmitter();
+
+		final ObjectNode message = new ObjectMapper().createObjectNode();
+		message.put("host", "launchblock.gg");
+		
+		emitter.send("kafka_topic", message);
+		
+		//...
+		emitter.close();
 	}
 	
 }
