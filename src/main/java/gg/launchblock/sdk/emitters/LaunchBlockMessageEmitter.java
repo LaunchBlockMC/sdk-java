@@ -21,7 +21,7 @@ public class LaunchBlockMessageEmitter {
 	 * @see	#quickSendAll(Collection)
 	 */
 	public static void quickSend(final String topic, final JsonNode value) {
-		quickSendAll(Collections.singletonList(new ImmutablePair<>(topic, value)));
+		quickSendAll(Collections.singletonList(new ImmutablePair<>(topic, value))); 
 	}
 
 	/**
