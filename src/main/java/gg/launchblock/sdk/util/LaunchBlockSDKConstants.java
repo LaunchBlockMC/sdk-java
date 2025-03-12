@@ -24,6 +24,7 @@ public class LaunchBlockSDKConstants {
 
 	/// Amount of ms that we try to establish a connection to kafka for before failing
 	public static final int KAFKA_CONNECTION_TIMEOUT = 100;
+
 	public static final String KAFKA_HOSTNAME;
 	public static final int KAFKA_PORT;
 

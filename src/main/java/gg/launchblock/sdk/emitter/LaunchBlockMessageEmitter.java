@@ -1,4 +1,4 @@
-package gg.launchblock.sdk.emitters;
+package gg.launchblock.sdk.emitter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import gg.launchblock.sdk.exception.LaunchBlockSDKException;
@@ -21,7 +21,7 @@ public class LaunchBlockMessageEmitter {
 	 * @see	#quickSendAll(Collection)
 	 */
 	public static void quickSend(final String topic, final JsonNode value) {
-		quickSendAll(Collections.singletonList(new ImmutablePair<>(topic, value))); 
+		quickSendAll(Collections.singletonList(new ImmutablePair<>(topic, value)));
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class LaunchBlockMessageEmitter {
 		this.kafkaProducer = createProducer();
 	}
 
-	public KafkaProducer<String, String> createProducer() {
+	private KafkaProducer<String, String> createProducer() {
 		if(!KafkaUtil.isKafkaRunning()) {
 			throw new LaunchBlockSDKException(LaunchBlockSDKExceptionType.KAFKA,
 					"Could not connect to kafka. Make sure your kafka instance is enabled before attempting to emit messages");
@@ -67,7 +67,7 @@ public class LaunchBlockMessageEmitter {
 	}
 
 	/**
-	 * uses {@link LaunchBlockMessageEmitter#sendAll(boolean, Collection)} with a one element collection
+	 * Uses {@link LaunchBlockMessageEmitter#sendAll(boolean, Collection)} with a one element collection
 	 */
 	public void send(final String topic, final JsonNode value, final boolean flush) {
 		this.sendAll(flush, Collections.singletonList(new ImmutablePair<>(topic, value)));
