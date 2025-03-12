@@ -51,6 +51,7 @@ jobs:
 
       # Step 9: Send notification to Discord
       - name: Send notification to Discord
+        if: always()
         uses: SethCohen/github-releases-to-discord@v1.16.2
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
