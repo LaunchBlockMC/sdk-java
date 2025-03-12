@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'gg.launchblock'
-version = '1.0-PREVIEW'
+version = 'v0.1.0'
 
 archivesBaseName = 'sdk-java'
 
